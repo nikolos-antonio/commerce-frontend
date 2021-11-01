@@ -11,7 +11,7 @@ const Dashboard = () => {
 	return (
 		<Paper elevation={3} sx={{ p: 3 }}>
 			<Typography variant='h4' gutterBottom>
-				Welcome, {user && user}
+				Welcome, {user}
 			</Typography>
 			<Typography paragraph>
 				Please get started by selecting a cubicle.

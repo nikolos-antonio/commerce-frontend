@@ -9,6 +9,9 @@ import { Stack } from '@mui/material'
 const UserProfile = () => {
 	const { user } = useAuth()
 	const { reservation } = useReservation()
+	const filteredReservation = reservation.filter(
+		(o) => o.userID == user.toString()
+	)
 
 	return (
 		<Stack spacing={2}>
@@ -36,7 +39,7 @@ const UserProfile = () => {
 					<Typography variant='h4' gutterBottom>
 						My reservations
 					</Typography>
-					<CubicleTable cubicles={reservation} showDelete />
+					<CubicleTable cubicles={filteredReservation} showDelete />
 				</Paper>
 			)}
 		</Stack>

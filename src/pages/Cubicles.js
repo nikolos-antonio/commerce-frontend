@@ -6,45 +6,50 @@ import { Link } from 'react-router-dom'
 import { Stack } from '@mui/material'
 import moment from 'moment'
 import { useReservation } from '../context/ReservationContext'
+import { useAuth } from '../context/AuthContext'
 
 const Cubicles = () => {
 	const [value, setValue] = useState([null, null])
-	const data = [
-		{
-			cubicleID: '1',
-			startTime: new Date(2021, 9, 27),
-			endTime: new Date(2021, 9, 28),
-		},
-		{
-			cubicleID: '2',
-			startTime: new Date(2021, 9, 28),
-			endTime: new Date(2021, 9, 29),
-		},
-		{
-			cubicleID: '3',
-			startTime: new Date(2021, 9, 29),
-			endTime: new Date(2021, 9, 29),
-		},
-		{
-			cubicleID: '4',
-			startTime: new Date(2021, 10, 1),
-			endTime: new Date(2021, 10, 4),
-		},
-		{
-			cubicleID: '5',
-			startTime: new Date(2021, 10, 4),
-			endTime: new Date(2021, 10, 6),
-		},
-	]
+
 	const [filteredData, setFilteredData] = useState([])
 	const { reservation } = useReservation()
+	const { user } = useAuth()
 
+	const filteredReservation = reservation.filter(
+		(o) => o.userID == user.toString()
+	)
 	useEffect(() => {
-		const filteredData = data.filter(
+		//declaration (sets secondFilteredData to dates that are reserved)
+		const filteredData = []
+		const secondFilteredData = reservation.filter(
 			(current) =>
 				moment(current.startTime).isSameOrAfter(value[0]) &&
 				moment(current.endTime).isSameOrBefore(value[1])
 		)
+
+		//Checks for if Cubicle id is equal to i for each date range in secondFilteredData
+		//If cubicle is included in secondFilteredData then don't allow user to reserve it by not putting it into filteredData
+		for (let i = 1; i <= 5; i++)
+		{
+			let bool = new Boolean(false)
+			secondFilteredData.forEach((current) => {
+				if (current.cubicleID.localeCompare(i.toString()) == 0)
+				{
+					bool = new Boolean(true)
+				}
+			})
+
+			if (bool == false)
+			{
+				filteredData.push(
+					{
+						userID: user.toString(),
+						cubicleID: i.toString(),
+						startTime: new Date(value[0]),
+						endTime: new Date(value[1]),
+					})
+			}
+		}
 
 		setFilteredData(filteredData)
 	}, [value])
@@ -69,7 +74,7 @@ const Cubicles = () => {
 					<Typography variant='h5' gutterBottom>
 						My reservations
 					</Typography>
-					<CubicleTable cubicles={reservation} showDelete />
+					<CubicleTable cubicles={filteredReservation} showDelete />
 				</Paper>
 			)}
 		</Stack>

@@ -9,10 +9,15 @@ import { useAlert } from '../context/AlertContext'
 
 const fakeUsers = [
 	{
-		id: 1,
+		id: '1',
 		email: 'charlie@gmail.com',
 		password: 'password',
 	},
+	{
+		id: '2',
+		email: 'nikolos@gmail.com',
+		password: 'password',
+	}
 ]
 
 const initialValues = { email: '', password: '' }
